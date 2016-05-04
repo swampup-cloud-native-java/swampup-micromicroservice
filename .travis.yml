@@ -1,2 +1,4 @@
 language: java
 jdk: oraclejdk8
+script: ./mvnw deploy -Dbuild.version=${TRAVIS_BUILD_NUMBER}
+install: echo installing

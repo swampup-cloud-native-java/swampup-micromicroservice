@@ -5,7 +5,7 @@
 
 	<groupId>com.example</groupId>
 	<artifactId>micro-microservice</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${build.version}</version>
 	<packaging>jar</packaging>
 
 	<name>micro-microservice</name>
@@ -21,6 +21,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
+		<build.version>0.0.1-SNAPSHOT</build.version>
 	</properties>
 
 	<dependencies>
@@ -42,6 +43,41 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.jfrog.buildinfo</groupId>
+				<artifactId>artifactory-maven-plugin</artifactId>
+				<version>2.4.0</version>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>build-info</id>
+						<goals>
+							<goal>publish</goal>
+						</goals>
+						<configuration>
+							<deployProperties>
+								<build.vcsRevision>{{TRAVIS_COMMIT}}</build.vcsRevision>
+							</deployProperties>
+							<publisher>
+								<contextUrl>https://cloudnativejava.artifactoryonline.com/cloudnativejava</contextUrl>
+								<username>${env.ARTIFACTORY_USERNAME}</username>
+								<password>${env.ARTIFACTORY_PASSWORD}</password>
+								<repoKey>libs-staging-local</repoKey>
+								<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+							</publisher>
+							<buildInfo>
+								<agentName>Travis CI</agentName>
+								<buildNumber>{{TRAVIS_BUILD_NUMBER}}</buildNumber>
+								<buildUrl>http://travis-ci.org/{{TRAVIS_REPO_SLUG}}/builds/{{TRAVIS_BUILD_ID}}
+								</buildUrl>
+								<principal>{{USER}}</principal>
+								<vcsRevision>{{TRAVIS_COMMIT}}</vcsRevision>
+							</buildInfo>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 	
